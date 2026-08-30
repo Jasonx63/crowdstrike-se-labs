@@ -36,3 +36,7 @@ The resulting process relationship was:
 powershell.exe
       ↓
 notepad.exe
+```
+[![Sysmon Event ID 1 showing PowerShell launching Notepad](lab-01-01-sysmon-powershell-notepad-process.png)](../../screenshots/lab-01/lab-01-01-sysmon-powershell-notepad-process.png)
+
+*Click the image to view it full size.*
