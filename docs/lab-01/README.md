@@ -38,3 +38,28 @@ powershell.exe
 notepad.exe
 ```
 ![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-01-sysmon-powershell-notepad-process.png)
+
+
+## Suspicious PowerShell Simulation
+
+After establishing a benign PowerShell baseline, I performed a safe simulation designed to create more suspicious execution context without using malware or destructive behavior.
+
+The command was launched from `cmd.exe`, which then started PowerShell with the following parameters:
+
+- `-NoProfile`
+- `-ExecutionPolicy Bypass`
+- `-Command`
+
+The PowerShell command created a harmless text file and opened it in Notepad.
+
+The resulting process relationship was:
+
+```text
+cmd.exe
+   ↓
+powershell.exe
+```
+
+![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-02-sysmon-suspicious-powershell-execution.png)
+
+*Safe suspicious PowerShell simulation: Sysmon Event ID 1 records `powershell.exe` launched by `cmd.exe` with `-NoProfile` and `-ExecutionPolicy Bypass`. These parameters do not prove malicious activity, but the parent-child relationship and command-line context provide additional reasons for an analyst to investigate the execution.*
