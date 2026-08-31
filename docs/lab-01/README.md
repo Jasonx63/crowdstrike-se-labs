@@ -84,3 +84,10 @@ cmd.exe
 powershell.exe
    ↓
 Notepad.exe
+```
+
+#### Sysmon Event ID 1 — PowerShell Launching Notepad
+
+![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-03-sysmon-powershell-notepad-follow-on.png).
+
+*Follow-on process activity: Sysmon Event ID 1 records `Notepad.exe` launched by `powershell.exe`. The parent command line preserves the earlier PowerShell execution context, allowing this event to be correlated with the previous `cmd.exe → powershell.exe` process-creation event.*
