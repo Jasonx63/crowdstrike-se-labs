@@ -63,3 +63,24 @@ powershell.exe
 ![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-02-sysmon-suspicious-powershell-execution.png)
 
 *Safe suspicious PowerShell simulation: Sysmon Event ID 1 records `powershell.exe` launched by `cmd.exe` with `-NoProfile` and `-ExecutionPolicy Bypass`. These parameters do not prove malicious activity, but the parent-child relationship and command-line context provide additional reasons for an analyst to investigate the execution.*
+
+### Follow-On Process Activity
+
+After the suspicious PowerShell process was created, Sysmon recorded the next process in the execution chain: `Notepad.exe`.
+
+The event shows that `powershell.exe` was the parent process responsible for launching Notepad. The `ParentCommandLine` field also preserves the PowerShell command-line context from the previous event, including:
+
+- `-NoProfile`
+- `-ExecutionPolicy Bypass`
+- the scripted command that created and opened the harmless test file
+
+This allows the individual Sysmon events to be correlated into a larger process sequence rather than analyzed in isolation.
+
+The resulting process chain was:
+
+```text
+cmd.exe
+   ↓
+powershell.exe
+   ↓
+Notepad.exe
