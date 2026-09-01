@@ -91,3 +91,18 @@ Notepad.exe
 ![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-03-sysmon-powershell-notepad-follow-on.png).
 
 *Follow-on process activity: Sysmon Event ID 1 records `Notepad.exe` launched by `powershell.exe`. The parent command line preserves the earlier PowerShell execution context, allowing this event to be correlated with the previous `cmd.exe → powershell.exe` process-creation event.*
+```
+
+## MITRE ATT&CK Mapping
+
+| Observed Behavior | Technique | ID | Evidence | Why It Fits |
+|---|---|---|---|---|
+| PowerShell executed scripted commands and launched a child process | Command and Scripting Interpreter: PowerShell | T1059.001 | Sysmon Event ID 1 showing `powershell.exe`, its command line, parent process, and follow-on `Notepad.exe` execution | PowerShell was used as the command and scripting interpreter to execute the simulated activity |
+
+```
+### Mapping Notes
+
+This mapping is based on the behavior that was actually observed in the lab.
+
+The presence of PowerShell alone does not indicate malicious activity. PowerShell is a legitimate Windows administrative tool. The ATT&CK mapping reflects that PowerShell was used for command execution during the simulation, while the surrounding process ancestry and command-line context provide the information needed for further investigation.
+
