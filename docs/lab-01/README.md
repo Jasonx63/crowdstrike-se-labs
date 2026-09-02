@@ -1,5 +1,13 @@
 # Lab 01 — Suspicious PowerShell and Endpoint Execution
 
+## Executive Summary
+
+This lab demonstrates how endpoint telemetry can be used to distinguish normal PowerShell execution from activity that warrants further investigation.
+
+Using a Windows 11 virtual machine, Sysmon, and System Informer, I captured process ancestry and command-line context for both benign and suspicious-looking PowerShell activity. I then reconstructed the execution chain, mapped the observed behavior to MITRE ATT&CK T1059.001 — PowerShell, and evaluated how documented CrowdStrike Falcon capabilities relate to detection and investigation of similar endpoint activity.
+
+CrowdStrike Falcon was not installed in this home lab. All Falcon references are based on documented CrowdStrike capabilities and are kept separate from the Windows telemetry observed during the simulation.
+
 ## Objective
 
 The purpose of this lab is to learn how Windows process activity can be investigated using endpoint telemetry.
@@ -310,15 +318,15 @@ From an operational perspective, better execution context can help reduce the ti
 
 For a security team, this can support:
 
-faster triage;
-more informed investigation;
-more consistent analyst decisions;
-quicker escalation when activity is truly suspicious;
-reduced time spent investigating expected administrative behavior.
+- faster triage;
+- more informed investigation;
+- more consistent analyst decisions;
+- quicker escalation when activity is truly suspicious;
+- reduced time spent investigating expected administrative behavior.
 
 For a security leader, the value is not simply having more telemetry. The value is helping the security team understand endpoint activity quickly enough to make confident response decisions before a suspicious event develops into a larger incident.
 
-CrowdStrike Relevance
+## CrowdStrike Relevance
 
 Based on CrowdStrike's documented capabilities, Falcon Insight XDR is relevant to this scenario because it is designed to provide endpoint detection and investigation context around related activity.
 
