@@ -1,0 +1,23 @@
+# Sources
+
+## MITRE ATT&CK
+
+- Command and Scripting Interpreter: PowerShell — T1059.001
+  - Publisher: MITRE ATT&CK
+  - Used for: Lab 1 technique mapping
+
+## Microsoft / Sysinternals
+
+- Sysmon documentation
+  - Publisher: Microsoft Sysinternals
+  - Used for: Sysmon Event ID 1 and endpoint telemetry concepts
+
+## CrowdStrike
+
+- Falcon Insight XDR
+  - Publisher: CrowdStrike
+  - Used for: Endpoint investigation and EDR capability mapping
+
+- Falcon Prevent
+  - Publisher: CrowdStrike
+  - Used for: Endpoint prevention capability discussion
