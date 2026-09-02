@@ -159,7 +159,7 @@ Identify child process
 Correlate related activity
       ↓
 Determine whether additional investigation is required
-
+```
 
 ## Detection vs Prevention vs Investigation vs Response
 
@@ -195,3 +195,133 @@ cmd.exe
 powershell.exe
    ↓
 Notepad.exe
+```
+## Customer Discovery Questions
+
+A Sales Engineer should understand how the customer currently detects, investigates, and responds to endpoint activity before recommending a solution.
+
+### 1. How do you currently detect suspicious PowerShell activity?
+
+**Why it matters:**  
+This helps identify whether the customer relies on antivirus, Windows logs, EDR, SIEM, or a combination of tools.
+
+**Useful follow-up:**  
+What context do your analysts receive when that activity is detected?
+
+---
+
+### 2. Can your analysts see parent-child process relationships and command-line activity?
+
+**Why it matters:**  
+Process ancestry and command-line context can help distinguish legitimate administration from potentially suspicious behavior.
+
+**Useful follow-up:**  
+If that information is not available in one place, where do analysts have to go to find it?
+
+---
+
+### 3. How does your current investigation workflow affect your analysts?
+
+**Why it matters:**  
+This can uncover issues such as tool switching, missing context, manual investigation steps, or analyst workload.
+
+**Useful follow-up:**  
+How much time does a typical endpoint investigation take today?
+
+---
+
+### 4. When an endpoint alert appears, how quickly can your team determine whether it is legitimate or malicious?
+
+**Why it matters:**  
+Detection alone does not resolve an incident. The customer also needs enough context to investigate and make a decision.
+
+**Useful follow-up:**  
+What usually causes investigations to take longer?
+
+---
+
+### 5. If suspicious PowerShell behavior appears on one endpoint, can you determine whether similar activity occurred elsewhere?
+
+**Why it matters:**  
+This helps uncover the customer's ability to search or hunt for related behavior across multiple endpoints.
+
+**Useful follow-up:**  
+Is that search performed from one platform, or does it require multiple tools?
+
+---
+
+### 6. What happens after your team confirms that an endpoint is compromised?
+
+**Why it matters:**  
+This begins the response conversation and helps identify whether the customer can contain, investigate, and remediate the endpoint efficiently.
+
+**Useful follow-up:**  
+How quickly can your team isolate a compromised endpoint from the rest of the environment?
+
+---
+
+## Discovery Approach
+
+The goal of discovery is not to immediately pitch a product.
+
+A stronger Sales Engineering approach is:
+
+```text
+Question
+   ↓
+Listen
+   ↓
+Clarify
+   ↓
+Quantify the impact
+   ↓
+Connect a relevant capability
+   ↓
+Confirm that the capability addresses the customer's problem
+```
+
+## Business Value
+
+This lab demonstrates why endpoint visibility matters beyond simply knowing that a process executed.
+
+PowerShell is a legitimate Windows administrative tool, so seeing `powershell.exe` by itself is not enough to determine whether activity is malicious.
+
+The more useful context came from:
+
+- the parent process;
+- the command line;
+- execution arguments;
+- child processes;
+- the sequence of related activity.
+
+That context helps an analyst move from:
+
+```text
+"PowerShell ran"
+
+to:
+"Here is who launched PowerShell,
+what command it executed,
+what process it created,
+and what happened next."
+```
+
+From an operational perspective, better execution context can help reduce the time analysts spend manually reconstructing activity across multiple tools or logs.
+
+For a security team, this can support:
+
+faster triage;
+more informed investigation;
+more consistent analyst decisions;
+quicker escalation when activity is truly suspicious;
+reduced time spent investigating expected administrative behavior.
+
+For a security leader, the value is not simply having more telemetry. The value is helping the security team understand endpoint activity quickly enough to make confident response decisions before a suspicious event develops into a larger incident.
+
+CrowdStrike Relevance
+
+Based on CrowdStrike's documented capabilities, Falcon Insight XDR is relevant to this scenario because it is designed to provide endpoint detection and investigation context around related activity.
+
+In this home lab, Sysmon provided the process telemetry used for the investigation. CrowdStrike Falcon was not installed, so this project does not claim that Falcon detected or prevented the simulated PowerShell activity.
+
+The business value being demonstrated is the importance of combining endpoint telemetry with investigation context so analysts can move from an isolated event to an understandable sequence of behavior.
