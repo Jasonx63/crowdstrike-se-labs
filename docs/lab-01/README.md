@@ -325,3 +325,30 @@ Based on CrowdStrike's documented capabilities, Falcon Insight XDR is relevant t
 In this home lab, Sysmon provided the process telemetry used for the investigation. CrowdStrike Falcon was not installed, so this project does not claim that Falcon detected or prevented the simulated PowerShell activity.
 
 The business value being demonstrated is the importance of combining endpoint telemetry with investigation context so analysts can move from an isolated event to an understandable sequence of behavior.
+
+
+## Limitations
+
+This lab was designed as a safe endpoint-investigation exercise and does not represent a real malware infection or compromised production system.
+
+Key limitations include:
+
+- CrowdStrike Falcon was not installed in the lab environment.
+- Sysmon and Windows telemetry were used to observe endpoint activity.
+- The PowerShell activity was intentionally harmless.
+- No real malware, credential theft, persistence, lateral movement, or destructive behavior was performed.
+- `-ExecutionPolicy Bypass` was used to create more interesting command-line context, but its presence alone does not prove malicious activity.
+- The lab demonstrates process ancestry and command-line investigation, not a complete incident-response workflow.
+- The Sysmon configuration did not capture an Event ID 11 for the specific test file created during the suspicious PowerShell simulation.
+- No claim is made that CrowdStrike Falcon would generate a specific alert or block this exact command.
+
+The purpose of the lab was to demonstrate how endpoint telemetry can be used to reconstruct process activity and how documented CrowdStrike capabilities could relate to a similar investigation in a production environment.
+
+## What I Learned
+
+From this lab, I learned that just because something is launched in an unusual way or appears suspicious does not automatically mean it is malicious.
+
+The value of endpoint telemetry is having enough context to determine what actually happened. By reviewing process ancestry, command-line activity, and follow-on behavior, an analyst can make a more informed decision about whether activity is legitimate or requires further investigation.
+
+I also learned how detection, prevention, investigation, and response serve different purposes. Having the right endpoint visibility helps a security team move from simply seeing an event to understanding it and deciding what action, if any, is needed.
+
