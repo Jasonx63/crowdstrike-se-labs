@@ -35,3 +35,37 @@ The Windows endpoint executed PowerShell with command-line options including `-N
 PowerShell is a legitimate administrative tool, but attackers can abuse it for execution, scripting, reconnaissance, payload delivery, and other post-compromise activity.
 
 In this lab, Sysmon telemetry was used to capture the PowerShell process creation and correlate it with the resulting network connection.
+
+## How CrowdStrike Falcon Maps to This Scenario
+
+This lab uses Sysmon to demonstrate endpoint telemetry concepts that an EDR platform such as CrowdStrike Falcon is designed to surface and correlate.
+
+### Falcon Insight XDR
+
+Falcon Insight XDR is the primary CrowdStrike capability that maps to this scenario.
+
+The lab demonstrated:
+
+- PowerShell process execution
+- Parent-child process relationships
+- Full command-line visibility
+- Outbound network activity
+- Correlation of process and network telemetry
+
+In a Falcon investigation, this type of context helps analysts understand not only that suspicious activity occurred, but also how the process started, what command it executed, and what activity followed.
+
+### Falcon Prevent
+
+Falcon Prevent adds prevention capabilities designed to identify and stop malicious or suspicious behavior.
+
+This lab did not use a CrowdStrike sensor and did not test whether Falcon Prevent would block the command. The PowerShell activity was intentionally benign and was used only to generate telemetry for investigation.
+
+The purpose of this lab is to demonstrate the type of behavioral context an analyst would use when investigating potentially suspicious PowerShell activity.
+
+### Response and Remediation
+
+If investigation confirmed that the endpoint was compromised, CrowdStrike response capabilities such as Real Time Response could be used to assist with remediation.
+
+This creates a simple security workflow:
+
+**Prevent → Detect and Investigate → Respond**
