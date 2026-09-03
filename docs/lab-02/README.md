@@ -4,7 +4,7 @@ The Windows endpoint executed a PowerShell command using the `-NoProfile` and `-
 
 Sysmon Event ID 1 captured the creation of the PowerShell process, including the full command line and parent process information.
 
-![PowerShell Process Creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png.png)
+![PowerShell Process Creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
 
 Sysmon Event ID 3 captured the outbound network connection initiated by the same PowerShell process.
 
