@@ -23,3 +23,15 @@ PowerShell is a legitimate Windows administration tool, but it can also be abuse
 Looking only at the existence of `powershell.exe` provides limited context. Endpoint telemetry makes it possible to investigate how PowerShell was launched, what command it executed, and what network activity resulted from that execution.
 
 In this lab, process creation and network telemetry were correlated to reconstruct the sequence of events rather than viewing each event in isolation.
+
+## MITRE ATT&CK Mapping
+
+### T1059.001 — PowerShell
+
+This scenario maps to MITRE ATT&CK technique **T1059.001 — PowerShell**.
+
+The Windows endpoint executed PowerShell with command-line options including `-NoProfile` and `-WindowStyle Hidden`, then used `Invoke-WebRequest` to initiate an outbound network connection.
+
+PowerShell is a legitimate administrative tool, but attackers can abuse it for execution, scripting, reconnaissance, payload delivery, and other post-compromise activity.
+
+In this lab, Sysmon telemetry was used to capture the PowerShell process creation and correlate it with the resulting network connection.
