@@ -69,3 +69,31 @@ If investigation confirmed that the endpoint was compromised, CrowdStrike respon
 This creates a simple security workflow:
 
 **Prevent → Detect and Investigate → Respond**
+
+
+## Business Value
+
+Suspicious PowerShell activity can be difficult to evaluate because PowerShell is also widely used for legitimate administration.
+
+The value of endpoint detection and response is the ability to provide context around that activity.
+
+In this lab, process and network telemetry showed:
+
+- How PowerShell was launched
+- The full command line that was executed
+- The destination IP address and port
+- The relationship between the process creation and resulting network connection
+
+This type of visibility can help a security team investigate suspicious behavior faster and make better decisions about whether activity is legitimate or malicious.
+
+Instead of investigating isolated events, an analyst can reconstruct the sequence of activity and understand what occurred on the endpoint.
+
+## SE Talk Track
+
+In this lab, I simulated suspicious PowerShell activity on a Windows endpoint and used Sysmon to investigate what happened.
+
+The process creation telemetry showed PowerShell launching with unusual command-line options and using `Invoke-WebRequest` to connect to another system. I then correlated that process with the outbound network connection using the matching Sysmon `ProcessGuid`.
+
+The key takeaway is that endpoint telemetry provides more than a simple alert. It gives analysts the context needed to understand how a process started, what it executed, and what activity followed.
+
+In a CrowdStrike environment, Falcon Insight XDR would be relevant to this type of investigation because it is designed to provide endpoint visibility and correlate related activity for analysts.
