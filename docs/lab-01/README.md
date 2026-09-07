@@ -2,8 +2,6 @@
 
 ## Executive Summary
 
-## Executive Summary
-
 This lab demonstrates how endpoint telemetry can be used to distinguish normal PowerShell execution from activity that warrants further investigation.
 
 Using a Windows 11 virtual machine with CrowdStrike Falcon, Sysmon, and System Informer, I captured process ancestry and command-line context for benign and suspicious-looking PowerShell activity. Falcon telemetry was used to examine process relationships and execution context, while Sysmon provided supplemental Windows telemetry for validation.
@@ -52,14 +50,17 @@ Falcon recorded the execution as endpoint telemetry. The process event showed No
 
 This activity did not represent malicious behavior. The purpose of the baseline was to demonstrate that PowerShell is a legitimate administrative tool and that process ancestry and command-line context are necessary to understand whether PowerShell activity deserves investigation.
 
-Falcon Telemetry
+### Falcon Telemetry
 
-Falcon telemetry showing legitimate Notepad.exe execution with powershell.exe as the parent process, establishing the benign PowerShell baseline.
+![Benign PowerShell Notepad Falcon telemetry](../../screenshots/lab-01/lab-01-03-benign-powershell-notepad-falcon-telemetry.png)
 
-Falcon Process Tree
+*Falcon telemetry showing legitimate `Notepad.exe` execution with `powershell.exe` as the parent process, establishing the benign PowerShell baseline.*
 
-Falcon process tree showing a normal interactive PowerShell session launched from Windows Terminal and spawning Notepad.
+### Falcon Process Tree
 
+![Benign PowerShell Notepad Falcon process tree](../../screenshots/lab-01/lab-01-04-benign-powershell-notepad-falcon-process-tree.png)
+
+*Falcon process tree showing a normal interactive PowerShell session launched from Windows Terminal and spawning Notepad.*
 ## Suspicious PowerShell Simulation
 
 After establishing a benign PowerShell baseline, I performed a safe simulation designed to create more suspicious execution context without using malware or destructive behavior.
