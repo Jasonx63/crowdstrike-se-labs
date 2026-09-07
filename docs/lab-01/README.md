@@ -25,28 +25,38 @@ The goal is to examine the resulting process relationship and understand why pro
 - Microsoft Defender enabled
 - Sysmon
 - System Informer
+- CrowdStrike Falcon sensor installed and communicating
+- Falcon prevention policy configured for controlled detect-only lab observation
 
-> CrowdStrike Falcon is not installed in this home lab. Any CrowdStrike mappings in this project are based on documented Falcon capabilities and are kept separate from the telemetry observed in the Windows lab.
 
 ## Benign Baseline Activity
 
 Before introducing suspicious PowerShell behavior, I created a normal and predictable process chain to establish a baseline.
 
-PowerShell was used to:
-
-1. Create a harmless text file in the Windows temporary directory.
-2. Launch `notepad.exe`.
-3. Open the text file in Notepad.
+PowerShell was used to launch `notepad.exe`.
 
 The resulting process relationship was:
 
 ```text
+WindowsTerminal.exe
+        ↓
 powershell.exe
-      ↓
-notepad.exe
+        ↓
+Notepad.exe
 ```
 ![Sysmon Event ID 1 showing PowerShell launching Notepad](../../screenshots/lab-01/lab-01-01-sysmon-powershell-notepad-process.png)
 
+Falcon recorded the execution as endpoint telemetry. The process event showed Notepad.exe with powershell.exe as its parent process, while the Falcon process tree provided the broader execution ancestry.
+
+This activity did not represent malicious behavior. The purpose of the baseline was to demonstrate that PowerShell is a legitimate administrative tool and that process ancestry and command-line context are necessary to understand whether PowerShell activity deserves investigation.
+
+Falcon Telemetry
+
+Falcon telemetry showing legitimate Notepad.exe execution with powershell.exe as the parent process, establishing the benign PowerShell baseline.
+
+Falcon Process Tree
+
+Falcon process tree showing a normal interactive PowerShell session launched from Windows Terminal and spawning Notepad.
 
 ## Suspicious PowerShell Simulation
 
