@@ -136,7 +136,7 @@ Falcon reconstructed the execution chain as:
 
 ![Suspicious PowerShell Falcon process tree](../../screenshots/lab-01/lab-01-06-suspicious-powershell-falcon-process-tree.png)
 
-Falcon process tree showing cmd.exe launching PowerShell with -NoProfile and -ExecutionPolicy Bypass, which then launched Notepad.exe. The execution produced telemetry but no Falcon detection.
+*Falcon process tree showing `cmd.exe` launching PowerShell with `-NoProfile` and `-ExecutionPolicy Bypass`, which then launched `Notepad.exe`. The execution produced telemetry but no Falcon detection.*
 
 
 ## Benign vs Suspicious Comparison
@@ -202,11 +202,11 @@ The value is not simply knowing that `powershell.exe` ran. The value comes from 
 
 Falcon Prevent is CrowdStrike's endpoint prevention capability.
 
-In a real environment, prevention policies may be used to stop activity that is determined to be malicious or violates configured security controls.
+In this controlled lab, the prevention policy was configured to prioritize observation so the suspicious PowerShell behavior could execute and be investigated.
 
-This lab does not demonstrate Falcon prevention because Falcon was not installed, and the PowerShell simulation itself was intentionally harmless.
+This particular PowerShell simulation was intentionally harmless and did not generate a Falcon detection or prevention action.
 
-Therefore, this project does not claim that Falcon Prevent would block this exact command.
+The lab therefore demonstrates visibility and investigation rather than prevention.
 
 ### Investigation
 
@@ -238,7 +238,7 @@ In this lab, the PowerShell process itself was not automatically malicious. The 
 
 Prevention is the process of stopping malicious activity from successfully executing or causing its intended effect.
 
-This lab did not demonstrate prevention because the PowerShell activity was intentionally harmless and CrowdStrike Falcon was not installed in the environment.
+This lab was configured to prioritize observation rather than blocking. The PowerShell activity was intentionally harmless, and Falcon did not generate a prevention action for this simulation.
 
 ### Investigation
 
@@ -382,9 +382,6 @@ For a security team, this can support:
 - reduced time spent investigating expected administrative behavior.
 
 For a security leader, the value is not simply having more telemetry. The value is helping the security team understand endpoint activity quickly enough to make confident response decisions before a suspicious event develops into a larger incident.
-
-
-## Limitations
 
 ## Limitations
 
