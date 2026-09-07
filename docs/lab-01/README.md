@@ -168,7 +168,13 @@ The presence of PowerShell alone does not indicate malicious activity. PowerShel
 
 ## How CrowdStrike Falcon Maps to This Scenario
 
-> CrowdStrike Falcon was not installed in this home lab. The endpoint evidence shown above was collected using Windows telemetry and Sysmon. The Falcon mappings below are based on documented CrowdStrike capabilities and are not presented as lab-generated Falcon results.
+CrowdStrike Falcon was installed and communicating on the Windows 11 endpoint during this lab.
+
+Falcon recorded both the benign and suspicious PowerShell executions as endpoint telemetry. In the benign baseline, Falcon showed a normal interactive PowerShell session launching `Notepad.exe`. In the suspicious variant, Falcon showed `cmd.exe` launching `powershell.exe` with `-NoProfile` and `-ExecutionPolicy Bypass`, followed by `Notepad.exe`.
+
+No Falcon detection was generated for the harmless suspicious simulation. The value of the lab was the visibility Falcon provided into process ancestry, command-line context, user context, and the full execution chain.
+
+This demonstrated how Falcon can help an analyst distinguish between legitimate PowerShell use and activity that deserves further investigation based on execution context.
 
 ### Detection Opportunity
 
@@ -377,14 +383,8 @@ For a security team, this can support:
 
 For a security leader, the value is not simply having more telemetry. The value is helping the security team understand endpoint activity quickly enough to make confident response decisions before a suspicious event develops into a larger incident.
 
-## CrowdStrike Relevance
 
-Based on CrowdStrike's documented capabilities, Falcon Insight XDR is relevant to this scenario because it is designed to provide endpoint detection and investigation context around related activity.
-
-In this home lab, Sysmon provided the process telemetry used for the investigation. CrowdStrike Falcon was not installed, so this project does not claim that Falcon detected or prevented the simulated PowerShell activity.
-
-The business value being demonstrated is the importance of combining endpoint telemetry with investigation context so analysts can move from an isolated event to an understandable sequence of behavior.
-
+## Limitations
 
 ## Limitations
 
@@ -392,16 +392,15 @@ This lab was designed as a safe endpoint-investigation exercise and does not rep
 
 Key limitations include:
 
-- CrowdStrike Falcon was not installed in the lab environment.
-- Sysmon and Windows telemetry were used to observe endpoint activity.
 - The PowerShell activity was intentionally harmless.
 - No real malware, credential theft, persistence, lateral movement, or destructive behavior was performed.
-- `-ExecutionPolicy Bypass` was used to create more interesting command-line context, but its presence alone does not prove malicious activity.
-- The lab demonstrates process ancestry and command-line investigation, not a complete incident-response workflow.
-- The Sysmon configuration did not capture an Event ID 11 for the specific test file created during the suspicious PowerShell simulation.
-- No claim is made that CrowdStrike Falcon would generate a specific alert or block this exact command.
+- `-ExecutionPolicy Bypass` and `-NoProfile` were used to create more suspicious-looking command-line context, but their presence alone does not prove malicious activity.
+- Falcon recorded the activity as endpoint telemetry, but no detection was generated for the suspicious simulation.
+- The lab demonstrates process ancestry, command-line investigation, and benign-vs-suspicious comparison rather than a complete incident-response workflow.
+- Sysmon was used as supplemental Windows telemetry to corroborate selected process activity.
+- The Sysmon configuration did not capture an Event ID 11 for the specific test file created during the earlier suspicious PowerShell simulation.
 
-The purpose of the lab was to demonstrate how endpoint telemetry can be used to reconstruct process activity and how documented CrowdStrike capabilities could relate to a similar investigation in a production environment.
+The purpose of the lab was to demonstrate how execution context changes the interpretation of PowerShell activity and how Falcon telemetry can help an analyst investigate those differences.
 
 ## What I Learned
 
