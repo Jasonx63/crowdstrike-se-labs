@@ -113,12 +113,44 @@ Notepad.exe
 
 *Follow-on process activity: Sysmon Event ID 1 records `Notepad.exe` launched by `powershell.exe`. The parent command line preserves the earlier PowerShell execution context, allowing this event to be correlated with the previous `cmd.exe → powershell.exe` process-creation event.*
 
+### Falcon Suspicious Execution Telemetry
+
+Falcon recorded the suspicious-looking PowerShell execution as endpoint telemetry.
+
+The PowerShell event showed:
+
+- `powershell.exe` as the process;
+- `cmd.exe` as the parent process;
+- `explorer.exe` as the grandparent process;
+- the full command line containing `-NoProfile` and `-ExecutionPolicy Bypass`.
+
+No Falcon detection was generated for this harmless simulation. The activity was still visible for investigation through Falcon telemetry.
+
+![Suspicious PowerShell Falcon telemetry](../../screenshots/lab-01/lab-01-05-suspicious-powershell-falcon-telemetry.png)
+
+*Falcon telemetry showing `cmd.exe` launching PowerShell with `-NoProfile` and `-ExecutionPolicy Bypass`, providing suspicious execution context without generating a detection.*
+
+### Falcon Suspicious Process Tree
+
+Falcon reconstructed the execution chain as:
+
+```text
+explorer.exe
+   ↓
+cmd.exe
+   ↓
+powershell.exe
+   ↓
+Notepad.exe
+
+Falcon process tree showing cmd.exe launching PowerShell with -NoProfile and -ExecutionPolicy Bypass, which then launched Notepad.exe. The execution produced telemetry but no Falcon detection.
 
 ## MITRE ATT&CK Mapping
 
 | Observed Behavior | Technique | ID | Evidence | Why It Fits |
 |---|---|---|---|---|
 | PowerShell executed scripted commands and launched a child process | Command and Scripting Interpreter: PowerShell | T1059.001 | Sysmon Event ID 1 showing `powershell.exe`, its command line, parent process, and follow-on `Notepad.exe` execution | PowerShell was used as the command and scripting interpreter to execute the simulated activity |
+
 
 
 ### Mapping Notes
