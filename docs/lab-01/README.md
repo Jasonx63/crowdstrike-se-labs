@@ -137,8 +137,19 @@ Falcon reconstructed the execution chain as:
 ![Suspicious PowerShell Falcon process tree](../../screenshots/lab-01/lab-01-06-suspicious-powershell-falcon-process-tree.png)
 
 Falcon process tree showing cmd.exe launching PowerShell with -NoProfile and -ExecutionPolicy Bypass, which then launched Notepad.exe. The execution produced telemetry but no Falcon detection.
-```
 
+
+## Benign vs Suspicious Comparison
+
+| Benign Baseline | Suspicious Variant |
+|---|---|
+| `WindowsTerminal.exe → powershell.exe → Notepad.exe` | `explorer.exe → cmd.exe → powershell.exe → Notepad.exe` |
+| Normal interactive PowerShell execution | PowerShell launched from `cmd.exe` |
+| Simple `Start-Process notepad.exe` activity | Used `-NoProfile` and `-ExecutionPolicy Bypass` |
+| Falcon recorded normal process telemetry | Falcon recorded the full suspicious-looking execution context |
+| No detection generated | No detection generated |
+
+The important difference was not the presence of `powershell.exe` or `Notepad.exe` by themselves. Falcon provided the process ancestry and command-line context needed to understand how the activity was executed and why the suspicious variant would deserve more analyst attention.
 
 ## MITRE ATT&CK Mapping
 
