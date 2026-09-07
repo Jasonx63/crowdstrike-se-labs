@@ -119,10 +119,10 @@ Falcon recorded the suspicious-looking PowerShell execution as endpoint telemetr
 
 The PowerShell event showed:
 
-- `powershell.exe` as the process;
-- `cmd.exe` as the parent process;
-- `explorer.exe` as the grandparent process;
-- the full command line containing `-NoProfile` and `-ExecutionPolicy Bypass`.
+- `powershell.exe` as the process
+- `cmd.exe` as the parent process
+- `explorer.exe` as the grandparent process
+- the full command line containing `-NoProfile` and `-ExecutionPolicy Bypass`
 
 No Falcon detection was generated for this harmless simulation. The activity was still visible for investigation through Falcon telemetry.
 
@@ -144,6 +144,8 @@ powershell.exe
 Notepad.exe
 
 Falcon process tree showing cmd.exe launching PowerShell with -NoProfile and -ExecutionPolicy Bypass, which then launched Notepad.exe. The execution produced telemetry but no Falcon detection.
+```
+
 
 ## MITRE ATT&CK Mapping
 
