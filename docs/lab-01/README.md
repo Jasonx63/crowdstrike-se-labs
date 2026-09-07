@@ -134,14 +134,7 @@ No Falcon detection was generated for this harmless simulation. The activity was
 
 Falcon reconstructed the execution chain as:
 
-```text
-explorer.exe
-   ↓
-cmd.exe
-   ↓
-powershell.exe
-   ↓
-Notepad.exe
+![Suspicious PowerShell Falcon process tree](../../screenshots/lab-01/lab-01-06-suspicious-powershell-falcon-process-tree.png)
 
 Falcon process tree showing cmd.exe launching PowerShell with -NoProfile and -ExecutionPolicy Bypass, which then launched Notepad.exe. The execution produced telemetry but no Falcon detection.
 ```
