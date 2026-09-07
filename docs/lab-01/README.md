@@ -2,11 +2,13 @@
 
 ## Executive Summary
 
+## Executive Summary
+
 This lab demonstrates how endpoint telemetry can be used to distinguish normal PowerShell execution from activity that warrants further investigation.
 
-Using a Windows 11 virtual machine, Sysmon, and System Informer, I captured process ancestry and command-line context for both benign and suspicious-looking PowerShell activity. I then reconstructed the execution chain, mapped the observed behavior to MITRE ATT&CK T1059.001 — PowerShell, and evaluated how documented CrowdStrike Falcon capabilities relate to detection and investigation of similar endpoint activity.
+Using a Windows 11 virtual machine with CrowdStrike Falcon, Sysmon, and System Informer, I captured process ancestry and command-line context for benign and suspicious-looking PowerShell activity. Falcon telemetry was used to examine process relationships and execution context, while Sysmon provided supplemental Windows telemetry for validation.
 
-CrowdStrike Falcon was not installed in this home lab. All Falcon references are based on documented CrowdStrike capabilities and are kept separate from the Windows telemetry observed during the simulation.
+The observed behavior was mapped to MITRE ATT&CK T1059.001 — PowerShell where supported by the executed activity.
 
 ## Objective
 
