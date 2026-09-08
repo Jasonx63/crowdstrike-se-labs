@@ -105,72 +105,91 @@ The two events shared the same `ProcessGuid`, allowing them to be correlated to 
 
 Both Sysmon events contained the same process identifier:
 
-```text
+text
 ProcessGuid: {6db4a906-c9be-6a97-9601-000000000f00}
+
+## Benign vs Suspicious Comparison
+
+| Benign Baseline | Suspicious Reverse-Shell Activity |
+|---|---|
+| PowerShell made a controlled HTTP request to `192.168.36.128:8081` | Reverse-shell behavior created more suspicious execution context |
+| Falcon recorded command-history telemetry | Falcon generated a high-severity detection |
+| Falcon recorded the outbound network connection | Falcon provided process-tree and execution details for investigation |
+| Activity was intentionally harmless | Activity was designed to emulate command-and-control behavior |
+| No malicious payload was used | Reverse-shell behavior was intentionally simulated in the isolated lab |
+| Prevention was not triggered | Prevention was disabled, so the activity remained available for investigation |
+
+The key difference was not simply that PowerShell communicated over the network. Both the benign and suspicious activities involved outbound communication.
+
+The more useful distinction came from the surrounding execution context, related process activity, and Falcon's detection logic. This demonstrated why analysts need to evaluate the full behavior rather than treating a single process name or network connection as proof of malicious activity.
+
 
 ## Investigation Findings
 
-The Windows endpoint executed a PowerShell command using the `-NoProfile` and `-WindowStyle Hidden` options. The command used `Invoke-WebRequest` to connect to the Kali Linux system at `192.168.36.128` over TCP port `8081`.
+The lab showed how process and network telemetry can be correlated to reconstruct suspicious endpoint activity.
 
-Sysmon Event ID 1 captured the creation of the PowerShell process, including the full command line and parent process information.
+Sysmon Event ID 1 recorded the PowerShell process creation, while Event ID 3 recorded the outbound TCP connection to `192.168.36.128:8081`.
 
-![PowerShell Process Creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
+Both events shared the same `ProcessGuid`:
 
-Sysmon Event ID 3 captured the outbound network connection initiated by the same PowerShell process.
+text
+{6db4a906-c9be-6a97-9601-000000000f00}
 
-![PowerShell Network Connection](../../screenshots/lab-02/01-powershell-network-connection-sysmon-event3.png)
-
-The `ProcessGuid` value matched between both events:
-
-`{6db4a906-c9be-6a97-9601-000000000f00}`
-
-This confirmed that the PowerShell process captured in Event ID 1 was the same process responsible for the outbound connection captured in Event ID 3.
-
-## Why This Matters
-
-PowerShell is a legitimate Windows administration tool, but it can also be abused by attackers.
-
-Looking only at the existence of `powershell.exe` provides limited context. Endpoint telemetry makes it possible to investigate how PowerShell was launched, what command it executed, and what network activity resulted from that execution.
-
-In this lab, process creation and network telemetry were correlated to reconstruct the sequence of events rather than viewing each event in isolation.
 
 ## MITRE ATT&CK Mapping
 
-### T1059.001 — PowerShell
+| Observed Behavior | Technique | ID | Evidence | Why It Fits |
+|---|---|---|---|---|
+| PowerShell executed commands during the simulation | Command and Scripting Interpreter: PowerShell | T1059.001 | Sysmon Event ID 1 and Falcon command-history telemetry | PowerShell was used as the command interpreter during the simulated activity |
+| PowerShell established outbound communication with the Kali Linux VM | Non-Standard Port | T1571 | Sysmon Event ID 3 and Falcon network telemetry showing communication with `192.168.36.128:8081` | The lab used TCP port `8081` for controlled communication between the Windows and Kali systems |
 
-This scenario maps to MITRE ATT&CK technique **T1059.001 — PowerShell**.
+### Mapping Notes
 
-The Windows endpoint executed PowerShell with command-line options including `-NoProfile` and `-WindowStyle Hidden`, then used `Invoke-WebRequest` to initiate an outbound network connection.
+The ATT&CK mappings are based only on behavior observed during the lab.
 
-PowerShell is a legitimate administrative tool, but attackers can abuse it for execution, scripting, reconnaissance, payload delivery, and other post-compromise activity.
+PowerShell and outbound network communication are not automatically malicious. The surrounding process context, command line, network destination, related events, and Falcon detection provided the additional information needed to determine whether the activity deserved investigation.
 
-In this lab, Sysmon telemetry was used to capture the PowerShell process creation and correlate it with the resulting network connection.
+The reverse-shell simulation was performed in an isolated lab environment and was intended to reproduce behavior associated with command-and-control activity without representing a real-world compromise.
 
 ## How CrowdStrike Falcon Maps to This Scenario
 
-This lab uses Sysmon to demonstrate endpoint telemetry concepts that an EDR platform such as CrowdStrike Falcon is designed to surface and correlate.
+CrowdStrike Falcon provided the primary endpoint visibility used to investigate the activity in this lab.
+
+During the benign baseline, Falcon recorded both the PowerShell command and the associated outbound network connection to the Kali Linux VM.
+
+During the reverse-shell simulation, Falcon generated a high-severity detection and provided additional context through the process tree and execution details.
+
+This demonstrated how Falcon can help an analyst move from simply observing a network connection to understanding:
+
+- which process initiated the activity;
+- what command was executed;
+- where the connection was directed;
+- how the process was launched;
+- whether related behavior triggered a detection.
+
+### Detection Opportunity
+
+The lab demonstrated that a single PowerShell process or outbound connection is not enough to determine whether activity is malicious.
+
+More useful detection context came from combining:
+
+- process ancestry;
+- command-line activity;
+- network destination and port;
+- related process behavior;
+- Falcon detection context.
+
+The benign HTTP request produced telemetry without representing malicious activity, while the reverse-shell simulation generated a high-severity Falcon detection.
+
+This comparison demonstrated why behavior and execution context are more useful than relying on a process name or network connection by itself.
 
 ### Falcon Insight XDR
 
-Falcon Insight XDR is the primary CrowdStrike capability that maps to this scenario.
+Falcon Insight XDR provides endpoint detection and response capabilities that help analysts investigate suspicious activity across process, command-line, and network telemetry.
 
-The lab demonstrated:
+In this lab, Falcon provided visibility into both the benign and suspicious activity and allowed the execution context to be reviewed through related endpoint events and process relationships.
 
-- PowerShell process execution
-- Parent-child process relationships
-- Full command-line visibility
-- Outbound network activity
-- Correlation of process and network telemetry
-
-In a Falcon investigation, this type of context helps analysts understand not only that suspicious activity occurred, but also how the process started, what command it executed, and what activity followed.
-
-### Falcon Prevent
-
-Falcon Prevent adds prevention capabilities designed to identify and stop malicious or suspicious behavior.
-
-This lab did not use a CrowdStrike sensor and did not test whether Falcon Prevent would block the command. The PowerShell activity was intentionally benign and was used only to generate telemetry for investigation.
-
-The purpose of this lab is to demonstrate the type of behavioral context an analyst would use when investigating potentially suspicious PowerShell activity.
+The value was not simply knowing that PowerShell or another process executed. The value came from being able to understand how the activity occurred and determine whether it required further investigation.
 
 ### Response and Remediation
 
