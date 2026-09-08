@@ -64,6 +64,25 @@ Falcon also recorded the corresponding outbound network connection from the Wind
 *Falcon network telemetry showing the PowerShell process communicating with `192.168.36.128` over TCP port `8081`.*
 
 
+## Suspicious Reverse-Shell Activity
+
+After establishing the benign PowerShell network baseline, I progressed the lab into a reverse-shell simulation.
+
+The goal was to create behavior that more closely resembled command-and-control activity and compare the resulting telemetry with the benign HTTP request.
+
+Unlike the baseline activity, the reverse-shell simulation produced behavior that Falcon identified as suspicious and generated a high-severity detection.
+
+### Falcon High-Severity Detection
+
+Falcon generated a high-severity detection associated with the executable used during the reverse-shell simulation.
+
+The process tree showed the execution path leading to the detected process and provided additional execution details, including the user context, command line, file path, and executable hash.
+
+![Falcon high-severity detection for reverse-shell simulation](../../screenshots/lab-02/lab-02-05-reverse-shell-falcon-high-detection-process-tree.png)
+
+*Falcon process tree and execution details showing a high-severity detection associated with the reverse-shell simulation. Prevention was disabled during the lab, so the activity was available for investigation rather than being blocked.*
+
+
 ## Investigation Findings
 
 The Windows endpoint executed a PowerShell command using the `-NoProfile` and `-WindowStyle Hidden` options. The command used `Invoke-WebRequest` to connect to the Kali Linux system at `192.168.36.128` over TCP port `8081`.
