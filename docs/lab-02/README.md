@@ -206,6 +206,23 @@ This demonstrated how Falcon can help an analyst move from simply observing a ne
 - how the process was launched;
 - whether related behavior triggered a detection.
 
+## Detection vs Prevention vs Investigation vs Response
+
+### Detection
+
+Detection is the process of identifying activity that may be suspicious or malicious.
+
+In this lab, Falcon generated a high-severity detection for the executable used during the reverse-shell simulation. The detection details showed that Falcon's sensor-based machine-learning logic classified the file as suspicious.
+
+### Prevention
+
+Prevention is the process of stopping malicious activity from successfully executing or continuing.
+
+Prevention was disabled during this lab, and Falcon showed:
+
+text
+Actions taken: None
+
 ### Detection Opportunity
 
 The lab demonstrated that a single PowerShell process or outbound connection is not enough to determine whether activity is malicious.
@@ -238,30 +255,104 @@ This creates a simple security workflow:
 
 **Prevent → Detect and Investigate → Respond**
 
+## Customer Discovery Questions
+
+A Sales Engineer should understand how the customer currently detects, investigates, and responds to suspicious endpoint and network activity before recommending a solution.
+
+### 1. How do you currently detect suspicious outbound connections from endpoints?
+
+**Why it matters:**  
+This helps identify whether the customer relies on EDR, firewall logs, SIEM alerts, network tools, or a combination of systems.
+
+**Useful follow-up:**  
+Can your analysts easily identify which process created the connection?
+
+---
+
+### 2. Can your analysts correlate process execution with network activity?
+
+**Why it matters:**  
+A network connection by itself does not explain how the activity started. Process and command-line context can help determine whether the behavior is legitimate or suspicious.
+
+**Useful follow-up:**  
+How many different tools do analysts need to use to reconstruct that activity?
+
+---
+
+### 3. How quickly can your team investigate suspicious command-and-control behavior?
+
+**Why it matters:**  
+This helps uncover whether analysts have enough context to understand what happened without spending significant time manually correlating logs.
+
+**Useful follow-up:**  
+What usually slows down that investigation?
+
+---
+
+### 4. If suspicious activity is detected but not automatically blocked, what happens next?
+
+**Why it matters:**  
+This helps identify the customer's response process and whether analysts can quickly contain or remediate affected endpoints.
+
+**Useful follow-up:**  
+Who is responsible for deciding when an endpoint should be isolated?
+
 
 ## Business Value
 
-Suspicious PowerShell activity can be difficult to evaluate because PowerShell is also widely used for legitimate administration.
+This lab demonstrates why endpoint visibility is valuable when investigating suspicious network activity.
 
-The value of endpoint detection and response is the ability to provide context around that activity.
+A network connection by itself does not explain what caused it. By combining process execution, command-line activity, network telemetry, and detection context, an analyst can understand how the activity started and what happened next.
 
-In this lab, process and network telemetry showed:
+In this lab, Falcon provided visibility into:
 
-- How PowerShell was launched
-- The full command line that was executed
-- The destination IP address and port
-- The relationship between the process creation and resulting network connection
+- the process responsible for the connection;
+- the command and execution context;
+- the destination IP address and port;
+- related process activity;
+- the high-severity detection generated during the reverse-shell simulation.
 
-This type of visibility can help a security team investigate suspicious behavior faster and make better decisions about whether activity is legitimate or malicious.
+From an operational perspective, this type of context can help reduce the time analysts spend manually correlating activity across separate tools and logs.
 
-Instead of investigating isolated events, an analyst can reconstruct the sequence of activity and understand what occurred on the endpoint.
+For a security team, that can support:
+
+- faster triage;
+- quicker investigation of suspicious connections;
+- more informed response decisions;
+- improved ability to distinguish benign activity from command-and-control behavior.
+
+For a security leader, the value is not simply collecting more telemetry. The value is giving analysts enough context to understand suspicious endpoint behavior quickly and make confident decisions about what should happen next.
 
 ## SE Talk Track
 
-In this lab, I simulated suspicious PowerShell activity on a Windows endpoint and used Sysmon to investigate what happened.
+"In this lab, I compared benign PowerShell network activity with a reverse-shell simulation.
 
-The process creation telemetry showed PowerShell launching with unusual command-line options and using `Invoke-WebRequest` to connect to another system. I then correlated that process with the outbound network connection using the matching Sysmon `ProcessGuid`.
+Falcon gave me visibility into the process, command line, network connection, and related execution context. When the suspicious activity occurred, Falcon also generated a high-severity detection.
 
-The key takeaway is that endpoint telemetry provides more than a simple alert. It gives analysts the context needed to understand how a process started, what it executed, and what activity followed.
+The key takeaway is that security teams need more than an alert. They need enough context to understand what happened, determine whether the activity is legitimate or malicious, and decide what action to take next."
 
-In a CrowdStrike environment, Falcon Insight XDR would be relevant to this type of investigation because it is designed to provide endpoint visibility and correlate related activity for analysts.
+## Limitations
+
+This lab was designed as a controlled endpoint-investigation exercise and does not represent a real production compromise.
+
+Key limitations include:
+
+- The activity was performed in an isolated VMware lab environment.
+- The reverse-shell simulation was intentionally controlled for demonstration purposes.
+- Falcon prevention was disabled, so no blocking action was expected.
+- The lab focused on endpoint telemetry, detection, and investigation rather than full incident response.
+- Sysmon was used as supplemental telemetry to validate process and network activity.
+- The observed behavior demonstrates one example of suspicious command-and-control activity and does not represent every possible reverse-shell technique.
+
+## What I Learned
+
+This lab reinforced the importance of correlating process and network activity during an endpoint investigation.
+
+A network connection alone does not explain what happened. By reviewing the process that created the connection, the command line, related telemetry, and Falcon detection context, I was able to reconstruct the activity more accurately.
+
+I also learned the difference between telemetry, detection, prevention, investigation, and response. In this lab, Falcon provided visibility and generated a high-severity detection while prevention remained disabled.
+
+The main takeaway was that strong endpoint visibility helps analysts understand not only that suspicious activity occurred, but how it happened and what should be investigated next.
+
+
+
