@@ -45,14 +45,23 @@ The PowerShell command was:
 
 ```powershell
 Invoke-WebRequest http://192.168.36.128:8081 | Out-Null
+```
 
-### Falcon Telemetry
+### Falcon Command History
 
-Falcon recorded the benign PowerShell execution as normal endpoint telemetry.
+Falcon recorded the PowerShell command, including the destination IP address and port used during the test.
 
-The process information provided a baseline for comparison with the later PowerShell activity that communicated with the Kali Linux system.
+![Benign PowerShell HTTP command shown in Falcon telemetry](../../screenshots/lab-02/lab-02-04-benign-http-falcon-command-history.png)
 
-No detection was generated for the benign baseline.
+*Falcon command-history telemetry showing a harmless PowerShell `Invoke-WebRequest` to the Kali Linux VM at `192.168.36.128:8081`.*
+
+### Falcon Network Telemetry
+
+Falcon also recorded the corresponding outbound network connection from the Windows endpoint at `192.168.36.129` to the Kali system at `192.168.36.128:8081`.
+
+![Benign PowerShell HTTP network connection shown in Falcon telemetry](../../screenshots/lab-02/lab-02-03-benign-http-falcon-network-connection.png)
+
+*Falcon network telemetry showing the PowerShell process communicating with `192.168.36.128` over TCP port `8081`.*
 
 
 ## Investigation Findings
