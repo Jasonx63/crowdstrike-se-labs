@@ -323,41 +323,12 @@ Confirm that the capability addresses the customer's problem
 
 ## Business Value
 
-This lab demonstrates why endpoint visibility matters beyond simply knowing that a process executed.
+PowerShell is a legitimate administrative tool, so a process name alone is not enough to determine whether activity is malicious.
 
-PowerShell is a legitimate Windows administrative tool, so seeing `powershell.exe` by itself is not enough to determine whether activity is malicious.
+In this lab, Falcon provided the process ancestry and command-line context needed to understand how the activity executed and why the suspicious variant deserved more attention.
 
-The more useful context came from:
+For a security team, that context can support faster triage, more confident investigations, and less time spent manually reconstructing endpoint activity across multiple tools.
 
-- the parent process;
-- the command line;
-- execution arguments;
-- child processes;
-- the sequence of related activity.
-
-That context helps an analyst move from:
-
-```text
-"PowerShell ran"
-
-to:
-"Here is who launched PowerShell,
-what command it executed,
-what process it created,
-and what happened next."
-```
-
-From an operational perspective, better execution context can help reduce the time analysts spend manually reconstructing activity across multiple tools or logs.
-
-For a security team, this can support:
-
-- faster triage;
-- more informed investigation;
-- more consistent analyst decisions;
-- quicker escalation when activity is truly suspicious;
-- reduced time spent investigating expected administrative behavior.
-
-For a security leader, the value is not simply having more telemetry. The value is helping the security team understand endpoint activity quickly enough to make confident response decisions before a suspicious event develops into a larger incident.
 
 ## Limitations
 
