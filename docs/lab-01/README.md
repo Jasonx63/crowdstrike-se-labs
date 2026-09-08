@@ -192,11 +192,11 @@ This type of context helps an analyst distinguish expected administrative activi
 
 ### Falcon Insight XDR
 
-CrowdStrike describes Falcon Insight XDR as providing endpoint detection and response with context-rich detections, investigation capabilities, MITRE ATT&CK mappings, and broader attack visibility.
+Falcon Insight XDR was relevant to this lab because it provided endpoint telemetry and investigation context for both the benign and suspicious PowerShell executions.
 
-For behavior like the PowerShell activity demonstrated in this lab, relevant investigation context could include related endpoint activity and the relationships between events that help an analyst understand how execution unfolded.
+The most useful evidence was the process ancestry and command-line detail that showed how the activity was launched and what happened next.
 
-The value is not simply knowing that `powershell.exe` ran. The value comes from understanding the surrounding behavior and determining whether the activity represents legitimate administration or part of an attack.
+In this lab, that visibility helped distinguish normal PowerShell use from a more suspicious execution pattern without relying on a detection alone.
 
 ### Falcon Prevent
 
