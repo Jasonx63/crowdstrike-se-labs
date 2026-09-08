@@ -81,7 +81,6 @@ The process tree showed the execution path leading to the detected process and p
 ![Falcon high-severity detection for reverse-shell simulation](../../screenshots/lab-02/lab-02-05-reverse-shell-falcon-high-detection-process-tree.png)
 
 *Falcon process tree and execution details showing a high-severity detection associated with the reverse-shell simulation. Prevention was disabled during the lab, so the activity was available for investigation rather than being blocked.*
-
 ### Sysmon Event Correlation
 
 Sysmon provided supplemental Windows telemetry for the suspicious PowerShell activity.
@@ -92,13 +91,13 @@ The two events shared the same `ProcessGuid`, allowing them to be correlated to 
 
 ### Sysmon Event ID 1 — PowerShell Process Creation
 
-![Sysmon Event ID 1 showing suspicious PowerShell process creation](../../screenshots/lab-02/lab-02-02-powershell-process-creation-sysmon-event1.png)
+![Sysmon Event ID 1 showing suspicious PowerShell process creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
 
 *Sysmon Event ID 1 showing `powershell.exe` launched with the command used during the lab simulation.*
 
 ### Sysmon Event ID 3 — PowerShell Network Connection
 
-![Sysmon Event ID 3 showing PowerShell network connection](../../screenshots/lab-02/lab-02-01-powershell-network-connection-sysmon-event3.png)
+![Sysmon Event ID 3 showing PowerShell network connection](../../screenshots/lab-02/01-powershell-network-connection-sysmon-event3.png)
 
 *Sysmon Event ID 3 showing `powershell.exe` initiating a TCP connection to the Kali Linux VM at `192.168.36.128:8081`.*
 
@@ -108,7 +107,6 @@ Both Sysmon events contained the same process identifier:
 
 ```text
 ProcessGuid: {6db4a906-c9be-6a97-9601-000000000f00}
-
 
 ## Investigation Findings
 
