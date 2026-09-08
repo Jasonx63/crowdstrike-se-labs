@@ -1,3 +1,43 @@
+# Lab 02 — PowerShell Network Activity and Command-and-Control Behavior
+
+## Executive Summary
+
+This lab demonstrates how endpoint telemetry can be used to investigate suspicious PowerShell activity that results in outbound network communication.
+
+Using a Windows 11 virtual machine with CrowdStrike Falcon and Sysmon, I captured PowerShell process creation and network activity associated with communication to a Kali Linux system.
+
+Sysmon Event ID 1 recorded the PowerShell process and command line, while Sysmon Event ID 3 recorded the outbound connection. The matching `ProcessGuid` values allowed the two events to be correlated to the same PowerShell process.
+
+The lab also progressed into a reverse-shell simulation that CrowdStrike Falcon blocked, demonstrating the difference between telemetry used for investigation and prevention triggered by more suspicious behavior.
+
+## Objective
+
+The objective of this lab is to understand how endpoint process and network telemetry can be correlated when investigating suspicious PowerShell activity.
+
+The lab focuses on:
+
+- identifying PowerShell process execution;
+- reviewing command-line context;
+- identifying outbound network activity;
+- correlating process and network events;
+- understanding how Falcon can provide both investigation visibility and prevention.
+
+The activity was performed in an isolated lab environment and was designed for safe security testing.
+
+## Environment
+
+- Windows 11 victim VM
+- Kali Linux attacker VM
+- VMware Workstation
+- Host-only isolated network
+- Windows victim IP: `192.168.36.129`
+- Kali attacker IP: `192.168.36.128`
+- Microsoft Defender enabled
+- Sysmon
+- CrowdStrike Falcon sensor installed and communicating
+- Falcon prevention policy configured for controlled detect-only lab observation
+
+
 ## Investigation Findings
 
 The Windows endpoint executed a PowerShell command using the `-NoProfile` and `-WindowStyle Hidden` options. The command used `Invoke-WebRequest` to connect to the Kali Linux system at `192.168.36.128` over TCP port `8081`.
