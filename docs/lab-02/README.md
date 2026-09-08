@@ -81,6 +81,45 @@ The process tree showed the execution path leading to the detected process and p
 ![Falcon high-severity detection for reverse-shell simulation](../../screenshots/lab-02/lab-02-05-reverse-shell-falcon-high-detection-process-tree.png)
 
 *Falcon process tree and execution details showing a high-severity detection associated with the reverse-shell simulation. Prevention was disabled during the lab, so the activity was available for investigation rather than being blocked.*
+
+### Falcon Process Event
+
+Falcon recorded the suspicious executable as a process event and preserved important execution context, including the command line, file path, parent process, and process identifiers.
+
+![Falcon process event for reverse-shell simulation](../../screenshots/lab-02/lab-02-06-reverse-shell-falcon-process-event.png)
+
+*Falcon process telemetry showing `Chrome.exe` executing from the user's Downloads directory with `explorer.exe` as the parent process.*
+
+### Falcon Machine-Learning Detection Details
+
+Falcon classified the executable as a high-severity detection using its sensor-based machine-learning detection logic.
+
+The detection details showed:
+
+- Severity: `High`
+- Technique: `Sensor-based ML`
+- Technique ID: `CST0007`
+- IOA name: `MLSensor-High`
+- Actions taken: `None`
+
+Because prevention was disabled during the lab, Falcon generated the detection without taking a blocking action.
+
+![Falcon machine-learning detection details](../../screenshots/lab-02/lab-02-07-reverse-shell-falcon-ml-detection-details.png)
+
+*Falcon detection details showing a high-confidence sensor-based machine-learning detection for the executable used during the reverse-shell simulation.*
+
+### Falcon Network Connection
+
+Falcon also recorded the detected process establishing an outbound TCP connection to the Kali Linux VM.
+
+The network telemetry showed:
+
+```text
+Windows endpoint: 192.168.36.129
+Remote system:    192.168.36.128
+Remote port:      8080
+Protocol:         TCP
+
 ### Sysmon Event Correlation
 
 Sysmon provided supplemental Windows telemetry for the suspicious PowerShell activity.
