@@ -37,6 +37,23 @@ The activity was performed in an isolated lab environment and was designed for s
 - CrowdStrike Falcon sensor installed and communicating
 - Falcon prevention policy configured for controlled detect-only lab observation
 
+## Benign Baseline
+
+Before introducing reverse-shell behavior, I generated a harmless outbound HTTP request from PowerShell to the Kali Linux VM.
+
+The PowerShell command was:
+
+```powershell
+Invoke-WebRequest http://192.168.36.128:8081 | Out-Null
+
+### Falcon Telemetry
+
+Falcon recorded the benign PowerShell execution as normal endpoint telemetry.
+
+The process information provided a baseline for comparison with the later PowerShell activity that communicated with the Kali Linux system.
+
+No detection was generated for the benign baseline.
+
 
 ## Investigation Findings
 
