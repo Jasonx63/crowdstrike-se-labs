@@ -114,7 +114,7 @@ Falcon also recorded the detected process establishing an outbound TCP connectio
 
 The network telemetry showed:
 
-```text
+text
 Windows endpoint: 192.168.36.129
 Remote system:    192.168.36.128
 Remote port:      8080
