@@ -263,67 +263,43 @@ Notepad.exe
 ```
 ## Customer Discovery Questions
 
-A Sales Engineer should understand how the customer currently detects, investigates, and responds to endpoint activity before recommending a solution.
-
-### 1. How do you currently detect suspicious PowerShell activity?
+### 1. How do your analysts currently investigate suspicious PowerShell activity?
 
 **Why it matters:**  
-This helps identify whether the customer relies on antivirus, Windows logs, EDR, SIEM, or a combination of tools.
+This helps uncover what telemetry, EDR, SIEM, or manual investigation steps the team relies on today.
 
 **Useful follow-up:**  
-What context do your analysts receive when that activity is detected?
+What information usually helps your team decide whether the activity is legitimate or malicious?
 
 ---
 
-### 2. Can your analysts see parent-child process relationships and command-line activity?
+### 2. Can your analysts easily see process ancestry and command-line context?
 
 **Why it matters:**  
-Process ancestry and command-line context can help distinguish legitimate administration from potentially suspicious behavior.
+Parent-child relationships and command-line details can help distinguish normal administrative activity from behavior that deserves investigation.
 
 **Useful follow-up:**  
-If that information is not available in one place, where do analysts have to go to find it?
+If that context is spread across multiple tools, how does that affect investigation time?
 
 ---
 
-### 3. How does your current investigation workflow affect your analysts?
+### 3. When an endpoint alert appears, how quickly can your team determine what happened?
 
 **Why it matters:**  
-This can uncover issues such as tool switching, missing context, manual investigation steps, or analyst workload.
+Detection alone is not enough. Analysts need enough context to reconstruct the activity and decide what action to take.
 
 **Useful follow-up:**  
-How much time does a typical endpoint investigation take today?
+What usually slows down endpoint investigations today?
 
 ---
 
-### 4. When an endpoint alert appears, how quickly can your team determine whether it is legitimate or malicious?
+### 4. If suspicious activity appears on one endpoint, can you quickly determine whether similar behavior occurred elsewhere?
 
 **Why it matters:**  
-Detection alone does not resolve an incident. The customer also needs enough context to investigate and make a decision.
+This helps uncover the customer's ability to scope activity across the environment and search for related behavior.
 
 **Useful follow-up:**  
-What usually causes investigations to take longer?
-
----
-
-### 5. If suspicious PowerShell behavior appears on one endpoint, can you determine whether similar activity occurred elsewhere?
-
-**Why it matters:**  
-This helps uncover the customer's ability to search or hunt for related behavior across multiple endpoints.
-
-**Useful follow-up:**  
-Is that search performed from one platform, or does it require multiple tools?
-
----
-
-### 6. What happens after your team confirms that an endpoint is compromised?
-
-**Why it matters:**  
-This begins the response conversation and helps identify whether the customer can contain, investigate, and remediate the endpoint efficiently.
-
-**Useful follow-up:**  
-How quickly can your team isolate a compromised endpoint from the rest of the environment?
-
----
+Can your team do that from one platform, or does it require multiple tools?
 
 ## Discovery Approach
 
