@@ -8,7 +8,7 @@ Using a Windows 11 virtual machine with CrowdStrike Falcon and Sysmon, I capture
 
 Sysmon Event ID 1 recorded the PowerShell process and command line, while Sysmon Event ID 3 recorded the outbound connection. The matching `ProcessGuid` values allowed the two events to be correlated to the same PowerShell process.
 
-The lab also progressed into a reverse-shell simulation that CrowdStrike Falcon blocked, demonstrating the difference between telemetry used for investigation and prevention triggered by more suspicious behavior.
+The lab also progressed into a reverse-shell simulation while Falcon prevention was disabled. Falcon generated a high-severity detection and preserved the associated process and network telemetry for investigation.
 
 ## Objective
 
@@ -20,7 +20,7 @@ The lab focuses on:
 - reviewing command-line context;
 - identifying outbound network activity;
 - correlating process and network events;
-- understanding how Falcon can provide both investigation visibility and prevention.
+- understanding how Falcon provides detection and investigation visibility when prevention is disabled.
 
 The activity was performed in an isolated lab environment and was designed for safe security testing.
 
@@ -63,6 +63,34 @@ Falcon also recorded the corresponding outbound network connection from the Wind
 
 *Falcon network telemetry showing the PowerShell process communicating with `192.168.36.128` over TCP port `8081`.*
 
+
+### Sysmon Event Correlation
+
+Sysmon provided supplemental Windows telemetry for the suspicious PowerShell activity.
+
+Event ID 1 recorded the PowerShell process creation and command line, while Event ID 3 recorded the outbound network connection to the Kali Linux system at `192.168.36.128:8081`.
+
+The two events shared the same `ProcessGuid`, allowing them to be correlated to the same PowerShell process.
+
+### Sysmon Event ID 1 — PowerShell Process Creation
+
+![Sysmon Event ID 1 showing suspicious PowerShell process creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
+
+*Sysmon Event ID 1 showing `powershell.exe` launched with the command used during the lab simulation.*
+
+### Sysmon Event ID 3 — PowerShell Network Connection
+
+![Sysmon Event ID 3 showing PowerShell network connection](../../screenshots/lab-02/01-powershell-network-connection-sysmon-event3.png)
+
+*Sysmon Event ID 3 showing `powershell.exe` initiating a TCP connection to the Kali Linux VM at `192.168.36.128:8081`.*
+
+### Process Correlation
+
+Both Sysmon events contained the same process identifier:
+
+```text
+ProcessGuid: {6db4a906-c9be-6a97-9601-000000000f00}
+```
 
 ## Suspicious Reverse-Shell Activity
 
@@ -114,38 +142,16 @@ Falcon also recorded the detected process establishing an outbound TCP connectio
 
 The network telemetry showed:
 
-text
+```text
 Windows endpoint: 192.168.36.129
 Remote system:    192.168.36.128
 Remote port:      8080
 Protocol:         TCP
+```
 
-### Sysmon Event Correlation
+![Falcon network connection for reverse-shell simulation](../../screenshots/lab-02/lab-02-08-reverse-shell-falcon-network-connection.png)
 
-Sysmon provided supplemental Windows telemetry for the suspicious PowerShell activity.
-
-Event ID 1 recorded the PowerShell process creation and command line, while Event ID 3 recorded the outbound network connection to the Kali Linux system at `192.168.36.128:8081`.
-
-The two events shared the same `ProcessGuid`, allowing them to be correlated to the same PowerShell process.
-
-### Sysmon Event ID 1 — PowerShell Process Creation
-
-![Sysmon Event ID 1 showing suspicious PowerShell process creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
-
-*Sysmon Event ID 1 showing `powershell.exe` launched with the command used during the lab simulation.*
-
-### Sysmon Event ID 3 — PowerShell Network Connection
-
-![Sysmon Event ID 3 showing PowerShell network connection](../../screenshots/lab-02/01-powershell-network-connection-sysmon-event3.png)
-
-*Sysmon Event ID 3 showing `powershell.exe` initiating a TCP connection to the Kali Linux VM at `192.168.36.128:8081`.*
-
-### Process Correlation
-
-Both Sysmon events contained the same process identifier:
-
-text
-ProcessGuid: {6db4a906-c9be-6a97-9601-000000000f00}
+*Falcon network telemetry showing `Chrome.exe` communicating with the Kali Linux VM at `192.168.36.128:8080` during the reverse-shell simulation.*
 
 ## Benign vs Suspicious Comparison
 
@@ -171,9 +177,22 @@ Sysmon Event ID 1 recorded the PowerShell process creation, while Event ID 3 rec
 
 Both events shared the same `ProcessGuid`:
 
-text
+```text
 {6db4a906-c9be-6a97-9601-000000000f00}
+```
+This allowed the process-creation event and network-connection event to be tied to the same PowerShell execution.
 
+Falcon provided additional endpoint context, including command-history telemetry, network telemetry, process relationships, and a high-severity detection during the reverse-shell simulation.
+
+The investigation demonstrated that the most useful evidence came from correlating:
+
+- process execution;
+- command-line activity;
+- network connections;
+- process relationships;
+- detection context.
+
+This combination provided a clearer picture of what occurred than any single event viewed by itself.
 
 ## MITRE ATT&CK Mapping
 
@@ -206,23 +225,7 @@ This demonstrated how Falcon can help an analyst move from simply observing a ne
 - how the process was launched;
 - whether related behavior triggered a detection.
 
-## Detection vs Prevention vs Investigation vs Response
-
-### Detection
-
-Detection is the process of identifying activity that may be suspicious or malicious.
-
-In this lab, Falcon generated a high-severity detection for the executable used during the reverse-shell simulation. The detection details showed that Falcon's sensor-based machine-learning logic classified the file as suspicious.
-
-### Prevention
-
-Prevention is the process of stopping malicious activity from successfully executing or continuing.
-
-Prevention was disabled during this lab, and Falcon showed:
-
-text
-Actions taken: None
-
+  
 ### Detection Opportunity
 
 The lab demonstrated that a single PowerShell process or outbound connection is not enough to determine whether activity is malicious.
@@ -246,6 +249,24 @@ Falcon Insight XDR provides endpoint detection and response capabilities that he
 In this lab, Falcon provided visibility into both the benign and suspicious activity and allowed the execution context to be reviewed through related endpoint events and process relationships.
 
 The value was not simply knowing that PowerShell or another process executed. The value came from being able to understand how the activity occurred and determine whether it required further investigation.
+
+## Detection vs Prevention vs Investigation vs Response
+
+### Detection
+
+Detection is the process of identifying activity that may be suspicious or malicious.
+
+In this lab, Falcon generated a high-severity detection for the executable used during the reverse-shell simulation. The detection details showed that Falcon's sensor-based machine-learning logic classified the file as suspicious.
+
+### Prevention
+
+Prevention is the process of stopping malicious activity from successfully executing or continuing.
+
+Prevention was disabled during this lab, and Falcon showed:
+
+```text
+Actions taken: None
+```
 
 ### Response and Remediation
 
