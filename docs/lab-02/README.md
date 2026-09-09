@@ -66,7 +66,7 @@ Falcon also recorded the corresponding outbound network connection from the Wind
 
 ### Sysmon Event Correlation
 
-Sysmon provided supplemental Windows telemetry for the suspicious PowerShell activity.
+Sysmon provided supplemental Windows telemetry for the benign PowerShell network activity.
 
 Event ID 1 recorded the PowerShell process creation and command line, while Event ID 3 recorded the outbound network connection to the Kali Linux system at `192.168.36.128:8081`.
 
@@ -249,7 +249,6 @@ Falcon Insight XDR provides endpoint detection and response capabilities that he
 In this lab, Falcon provided visibility into both the benign and suspicious activity and allowed the execution context to be reviewed through related endpoint events and process relationships.
 
 The value was not simply knowing that PowerShell or another process executed. The value came from being able to understand how the activity occurred and determine whether it required further investigation.
-
 ## Detection vs Prevention vs Investigation vs Response
 
 ### Detection
@@ -267,14 +266,6 @@ Prevention was disabled during this lab, and Falcon showed:
 ```text
 Actions taken: None
 ```
-
-### Response and Remediation
-
-If investigation confirmed that the endpoint was compromised, CrowdStrike response capabilities such as Real Time Response could be used to assist with remediation.
-
-This creates a simple security workflow:
-
-**Prevent → Detect and Investigate → Respond**
 
 ## Customer Discovery Questions
 
