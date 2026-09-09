@@ -74,7 +74,7 @@ The two events shared the same `ProcessGuid`, allowing them to be correlated to 
 
 ### Sysmon Event ID 1 — PowerShell Process Creation
 
-![Sysmon Event ID 1 showing suspicious PowerShell process creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
+![Sysmon Event ID 1 showing benign PowerShell process creation](../../screenshots/lab-02/02-powershell-process-creation-sysmon-event1.png)
 
 *Sysmon Event ID 1 showing `powershell.exe` launched with the command used during the lab simulation.*
 
@@ -249,6 +249,7 @@ Falcon Insight XDR provides endpoint detection and response capabilities that he
 In this lab, Falcon provided visibility into both the benign and suspicious activity and allowed the execution context to be reviewed through related endpoint events and process relationships.
 
 The value was not simply knowing that PowerShell or another process executed. The value came from being able to understand how the activity occurred and determine whether it required further investigation.
+
 ## Detection vs Prevention vs Investigation vs Response
 
 ### Detection
@@ -266,6 +267,29 @@ Prevention was disabled during this lab, and Falcon showed:
 ```text
 Actions taken: None
 ```
+### Investigation
+
+Investigation is the process of determining what happened after suspicious activity has been observed.
+
+In this lab, investigation included reviewing:
+
+- the detected process;
+- the command line and file path;
+- the parent process;
+- the outbound connection to `192.168.36.128:8080`;
+- related Falcon process and network telemetry;
+- Sysmon process and network events.
+
+This context helped reconstruct how the activity progressed from execution to network communication.
+
+### Response
+
+Response is the action taken after suspicious or malicious activity has been confirmed.
+
+In a real environment, response could include isolating the affected endpoint, terminating malicious processes, removing malicious files, and searching for related activity across other systems.
+
+This lab focused on detection and investigation rather than active response because the environment was intentionally configured for controlled observation.
+
 
 ## Customer Discovery Questions
 
