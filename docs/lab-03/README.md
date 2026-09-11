@@ -154,3 +154,29 @@ Falcon did not generate a detection for this activity.
 Although the scheduled task created suspicious execution context, the action itself remained harmless. The task launched PowerShell with unusual arguments but ultimately only wrote a timestamp to a local text file.
 
 This demonstrated the difference between suspicious-looking telemetry and activity that is sufficiently malicious to generate a detection.
+
+## Benign vs Suspicious Comparison
+
+| Benign Baseline | Suspicious Scheduled Task |
+|---|---|
+| Daily scheduled trigger at a specific time | `AtLogOn` trigger configured to run automatically when the user logs in |
+| Task launched `notepad.exe` | Task launched `powershell.exe` to execute a scripted command |
+| Simple Notepad execution with no unusual arguments | PowerShell used `-NoProfile`, `-WindowStyle Hidden`, and `-ExecutionPolicy Bypass` |
+| Falcon recorded expected scheduled-task telemetry | Falcon recorded task registration, unusual command-line arguments, and service-launched PowerShell activity |
+| No detection generated | No detection generated |
+
+The key difference was not the use of Task Scheduler by itself. Both tasks used the same legitimate Windows mechanism.
+
+The more important differences were the trigger, launched process, command-line context, and resulting execution behavior. Those details made the suspicious variant more worthy of analyst investigation even though the action itself remained harmless.
+
+## Investigation Findings
+
+The suspicious scheduled-task activity could be reconstructed chronologically using Falcon telemetry.
+
+First, Falcon recorded the scheduled-task registration event. This provided visibility into when the persistence mechanism was created, how it was configured, the executable it would launch, and the associated command-line arguments.
+
+When the task executed, Falcon showed `powershell.exe` being launched through Windows service infrastructure. The process tree provided the execution ancestry, while the process event preserved the full PowerShell command line and other details that could be tied back to the registered task.
+
+The process tree and command-line context were more useful than simply seeing that `powershell.exe` ran. Together, they showed how the task executed and gave the analyst enough context to determine whether the behavior was expected, suspicious, or malicious.
+
+In this lab, the execution looked suspicious but ultimately remained harmless, so Falcon recorded telemetry without generating a detection.
