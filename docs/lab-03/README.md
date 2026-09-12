@@ -180,3 +180,135 @@ When the task executed, Falcon showed `powershell.exe` being launched through Wi
 The process tree and command-line context were more useful than simply seeing that `powershell.exe` ran. Together, they showed how the task executed and gave the analyst enough context to determine whether the behavior was expected, suspicious, or malicious.
 
 In this lab, the execution looked suspicious but ultimately remained harmless, so Falcon recorded telemetry without generating a detection.
+
+## MITRE ATT&CK Mapping
+
+| Observed Behavior | Technique | ID | Evidence | Why It Fits |
+|---|---|---|---|---|
+| A Windows Scheduled Task was created with an `AtLogOn` trigger to automatically launch PowerShell | Scheduled Task/Job: Scheduled Task | T1053.005 | Falcon `ScheduledTaskRegisteredV3` telemetry showing the task registration, logon trigger, PowerShell action, and associated arguments | The task used Windows Task Scheduler to establish recurring execution at user logon, which matches the behavior described by T1053.005 |
+
+### Mapping Notes
+
+This mapping is based on the behavior that was actually demonstrated in the lab.
+
+Windows Scheduled Tasks are a legitimate administrative feature and are not inherently malicious. The suspicious context came from the combination of the `AtLogOn` trigger, automatic PowerShell execution, and command-line arguments such as `-WindowStyle Hidden`, `-NoProfile`, and `-ExecutionPolicy Bypass`.
+
+Falcon also associated the scheduled-task telemetry with tactic context related to Execution, Persistence, and Privilege Escalation. This does not prove that malicious privilege escalation occurred during the lab; it provides behavioral context around how scheduled tasks can be abused.
+
+No additional ATT&CK techniques are mapped because the PowerShell command only wrote a harmless timestamp to a local file and did not perform network communication, credential access, payload execution, or destructive activity.
+
+## How CrowdStrike Falcon Maps to This Scenario
+
+CrowdStrike Falcon provided the primary endpoint visibility used to investigate the scheduled-task persistence behavior in this lab.
+
+During the suspicious variant, Falcon recorded the scheduled-task registration event before the task executed. The telemetry exposed the task name, trigger, executable, PowerShell arguments, and related tactic context.
+
+When the task later executed, Falcon also recorded the resulting process ancestry and PowerShell process event.
+
+This allowed the activity to be reconstructed as:
+
+```text
+Scheduled task registered
+        ↓
+AtLogOn trigger configured
+        ↓
+Windows service infrastructure
+        ↓
+powershell.exe
+        ↓
+Harmless timestamp command
+```
+
+## Detection vs Prevention vs Investigation vs Response
+
+### Detection
+
+Detection is the process of identifying activity that may be suspicious or malicious.
+
+In this lab, Falcon did not generate a detection for the scheduled-task persistence simulation. Instead, it recorded detailed telemetry showing the task registration, PowerShell command line, process ancestry, and resulting execution.
+
+The absence of a detection did not mean the activity was invisible. Falcon still provided enough context for an analyst to determine that the behavior was unusual and worth investigating.
+
+### Prevention
+
+Prevention is the process of stopping malicious activity from executing or completing its intended effect.
+
+Falcon prevention was intentionally disabled during this lab so the scheduled task could execute and the resulting telemetry could be observed.
+
+Because the PowerShell action only wrote a harmless timestamp to a local file, this lab does not demonstrate Falcon prevention.
+
+### Investigation
+
+Investigation is the process of understanding what happened and determining whether the behavior represents legitimate activity or a security threat.
+
+In this lab, investigation included reviewing:
+
+- the scheduled-task registration event;
+- the `AtLogOn` trigger;
+- the PowerShell execution arguments;
+- the process tree;
+- the `svchost.exe → powershell.exe` relationship;
+- the resulting timestamp file.
+
+Together, these details allowed the scheduled-task activity to be reconstructed from creation through execution.
+
+### Response
+
+Response is the action taken after suspicious or malicious activity has been confirmed.
+
+If this behavior were confirmed as malicious in a real environment, an analyst could investigate related activity, remove the persistence mechanism, terminate malicious processes, isolate the affected endpoint, and search for similar behavior elsewhere.
+
+This lab focused on visibility and investigation rather than active response.
+
+## Business Value
+
+This lab demonstrated how suspicious persistence can create an investigation challenge for a security team, especially when a scheduled task contains unusual triggers, PowerShell execution, and suspicious-looking command-line arguments.
+
+Falcon made the activity easier to investigate by providing visibility into the scheduled-task registration before the task executed. This allowed the persistence mechanism, trigger, executable, and command-line arguments to be reviewed before the resulting PowerShell process ran.
+
+After execution, Falcon also provided the process tree and full process telemetry needed to understand how the task executed and what it actually did.
+
+From an operational perspective, this type of centralized endpoint context can reduce the amount of manual correlation required across tools such as Sysmon, Event Viewer, or process-monitoring utilities.
+
+For a security team, that can support:
+
+- faster triage;
+- earlier investigation of persistence mechanisms;
+- less time spent switching between separate tools;
+- more informed decisions about whether suspicious activity requires escalation.
+
+For security leadership, the value is improved analyst efficiency and faster understanding of endpoint behavior, allowing the team to spend more time responding to meaningful risks instead of manually reconstructing routine activity.
+
+## SE Talk Track
+
+"In this lab, I investigated a suspicious scheduled task that used behavior associated with MITRE ATT&CK T1053.005 — Scheduled Task/Job: Scheduled Task.
+
+Falcon gave me visibility into the task registration, logon trigger, PowerShell command line, and resulting process ancestry, which allowed me to reconstruct the activity from creation through execution.
+
+The behavior looked suspicious because of the persistence mechanism and PowerShell arguments, but the investigation showed that the task ultimately performed a harmless action.
+
+The customer value is faster investigation with relevant endpoint context available in one platform, helping analysts determine whether activity is expected, suspicious, or malicious without manually reconstructing the event across multiple tools."
+
+
+## Limitations
+
+This lab was designed as a controlled persistence simulation and does not represent a real compromise or production attack.
+
+Key limitations include:
+
+- The scheduled task performed only a harmless timestamp-writing action.
+- No malware, credential theft, lateral movement, destructive behavior, or external command-and-control activity was used.
+- Falcon recorded the activity as telemetry but did not generate a detection.
+- Prevention was intentionally disabled so the execution could be observed and investigated.
+- The task was manually triggered for testing instead of waiting for an actual logon event.
+- The lab demonstrated one persistence technique and does not represent every way scheduled tasks can be abused.
+- Falcon tactic context associated with the task does not prove that every listed tactic, such as Privilege Escalation, actually occurred in this lab.
+
+## What I Learned
+
+This lab taught me how powerful and flexible Windows Scheduled Tasks can be. They are useful for legitimate administration and automation, but that same functionality can also be abused for persistence. A scheduled task configured to run automatically at logon can continue executing without obvious user interaction, which makes understanding the trigger, action, and execution context important during an investigation.
+
+I also learned more about the difference between Falcon telemetry and a Falcon detection. In this lab, prevention was disabled, but detection capability was still available. Falcon did not generate a detection because the scheduled task ultimately performed a harmless action. Even without a detection, Falcon recorded the task registration, trigger, command-line arguments, process ancestry, and resulting PowerShell execution.
+
+The biggest lesson was that suspicious behavior does not automatically mean malicious behavior. Falcon provided enough context to investigate the activity from creation through execution and determine what the scheduled task actually did. In a real investigation, that visibility could help an analyst decide whether the activity should be allowed, removed, contained, or escalated for further response.
+
