@@ -6,7 +6,7 @@ This lab demonstrates how legitimate Windows Scheduled Tasks can be used for bot
 
 Using a Windows 11 virtual machine with CrowdStrike Falcon, I compared a benign scheduled task that launched Notepad with a more suspicious scheduled task configured to run PowerShell at logon with hidden execution and unusual command-line arguments.
 
-Falcon recorded the scheduled-task registration, process ancestry, and PowerShell execution as endpoint telemetry. No detection was generated because the simulated activity remained harmless, but the telemetry showed how analysts can identify persistence-related behavior through trigger context, process ancestry, and command-line details.
+Falcon recorded the scheduled-task registration, process ancestry, and PowerShell execution as endpoint telemetry. No detection was generated. The simulated action itself remained harmless, while the telemetry showed how analysts can identify persistence-related behavior through trigger context, process ancestry, and command-line details.
 
 ## Objective
 
@@ -27,7 +27,7 @@ The lab focuses on:
 - Kali Linux attacker/test VM
 - VMware Workstation
 - CrowdStrike Falcon sensor installed and communicating
-- Falcon prevention policy configured for controlled detect-only lab observation
+- - Falcon prevention disabled for controlled lab observation
 - Sysmon available for supplemental validation
 
 ## Benign Baseline
@@ -153,7 +153,7 @@ Falcon did not generate a detection for this activity.
 
 Although the scheduled task created suspicious execution context, the action itself remained harmless. The task launched PowerShell with unusual arguments but ultimately only wrote a timestamp to a local text file.
 
-This demonstrated the difference between suspicious-looking telemetry and activity that is sufficiently malicious to generate a detection.
+This demonstrated the difference between suspicious-looking telemetry and activity that may warrant investigation without necessarily generating a detection.
 
 ## Benign vs Suspicious Comparison
 
@@ -185,7 +185,7 @@ In this lab, the execution looked suspicious but ultimately remained harmless, s
 
 | Observed Behavior | Technique | ID | Evidence | Why It Fits |
 |---|---|---|---|---|
-| A Windows Scheduled Task was created with an `AtLogOn` trigger to automatically launch PowerShell | Scheduled Task/Job: Scheduled Task | T1053.005 | Falcon `ScheduledTaskRegisteredV3` telemetry showing the task registration, logon trigger, PowerShell action, and associated arguments | The task used Windows Task Scheduler to establish recurring execution at user logon, which matches the behavior described by T1053.005 |
+| A Windows Scheduled Task was created with an `AtLogOn` trigger to automatically launch PowerShell | Scheduled Task/Job: Scheduled Task | T1053.005 | Falcon `ScheduledTaskRegisteredV3` telemetry showing the task registration, logon trigger, PowerShell action, and associated arguments | The task used Windows Task Scheduler to establish automatic execution at user logon, which matches the behavior described by T1053.005 |
 
 ### Mapping Notes
 
@@ -260,6 +260,49 @@ If this behavior were confirmed as malicious in a real environment, an analyst c
 
 This lab focused on visibility and investigation rather than active response.
 
+## Customer Discovery Questions
+
+A Sales Engineer should understand how the customer currently identifies and investigates persistence mechanisms before recommending a solution.
+
+### 1. How do you currently identify new or modified scheduled tasks across your endpoints?
+
+**Why it matters:**  
+This helps determine whether the customer can see persistence mechanisms being created before they are used.
+
+**Useful follow-up:**  
+Can your analysts see who created the task, what it launches, and the trigger that causes it to run?
+
+---
+
+### 2. Can your analysts distinguish legitimate administrative automation from suspicious scheduled-task activity?
+
+**Why it matters:**  
+Scheduled Tasks are commonly used for legitimate IT operations, so context such as the trigger, command line, process ancestry, and user is important.
+
+**Useful follow-up:**  
+What information do analysts rely on today to make that distinction?
+
+---
+
+### 3. If PowerShell launches automatically at logon, how quickly can your team determine why it ran?
+
+**Why it matters:**  
+Automatic PowerShell execution can be legitimate or suspicious. Analysts need enough context to understand how it was launched and what it actually did.
+
+**Useful follow-up:**  
+Can your team connect the PowerShell process back to the scheduled task that created the execution?
+
+---
+
+### 4. If suspicious persistence is found on one endpoint, how do you determine whether similar persistence exists elsewhere?
+
+**Why it matters:**  
+Finding one persistence mechanism may require broader scoping across the environment.
+
+**Useful follow-up:**  
+Can your analysts search for similar scheduled-task or PowerShell activity across other endpoints from the same platform?
+
+
 ## Business Value
 
 This lab demonstrated how suspicious persistence can create an investigation challenge for a security team, especially when a scheduled task contains unusual triggers, PowerShell execution, and suspicious-looking command-line arguments.
@@ -308,7 +351,7 @@ Key limitations include:
 
 This lab taught me how powerful and flexible Windows Scheduled Tasks can be. They are useful for legitimate administration and automation, but that same functionality can also be abused for persistence. A scheduled task configured to run automatically at logon can continue executing without obvious user interaction, which makes understanding the trigger, action, and execution context important during an investigation.
 
-I also learned more about the difference between Falcon telemetry and a Falcon detection. In this lab, prevention was disabled, but detection capability was still available. Falcon did not generate a detection because the scheduled task ultimately performed a harmless action. Even without a detection, Falcon recorded the task registration, trigger, command-line arguments, process ancestry, and resulting PowerShell execution.
+I also learned more about the difference between Falcon telemetry and a Falcon detection. In this lab, prevention was disabled, but detection capability was still available. Falcon did not generate a detection, while the scheduled task ultimately performed only a harmless action. Even without a detection, Falcon recorded the task registration, trigger, command-line arguments, process ancestry, and resulting PowerShell execution.
 
 The biggest lesson was that suspicious behavior does not automatically mean malicious behavior. Falcon provided enough context to investigate the activity from creation through execution and determine what the scheduled task actually did. In a real investigation, that visibility could help an analyst decide whether the activity should be allowed, removed, contained, or escalated for further response.
 
