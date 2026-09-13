@@ -144,17 +144,25 @@ The investigation showed exactly how the original files were changed and confirm
 
 ## MITRE ATT&CK Mapping
 
-| Observed Behavior | Technique | ID | Evidence | Why It Fits |
-|---|---|---|---|---|
-| Multiple test files were modified in place to simulate ransomware-like file impact | Data Encrypted for Impact | T1486 | Falcon CommandHistory showing file enumeration, content transformation, overwrite operations, and `.locked` extension changes | The activity was designed to safely simulate the observable impact pattern associated with ransomware, although no real cryptographic encryption occurred |
+This lab was designed to simulate ransomware-like file impact without performing real encryption.
+
+Because the test used Base64 encoding rather than cryptographic encryption, I did not map the activity directly to T1486 — Data Encrypted for Impact.
+
+The observed behavior demonstrated:
+
+- bulk file enumeration;
+- modification of stored file contents;
+- overwriting original data;
+- file-extension changes;
+- ransomware-like impact against a controlled set of dummy files.
 
 ### Mapping Notes
 
-This mapping is based on the behavior demonstrated during the lab.
+MITRE ATT&CK T1486 — Data Encrypted for Impact describes behavior in which adversaries encrypt data to interrupt availability.
 
-The simulation did not perform real cryptographic encryption. Base64 encoding was used as a safe and reversible transformation to reproduce the observable pattern of bulk file modification and extension changes.
+This lab intentionally did not perform cryptographic encryption, so claiming T1486 as directly demonstrated would overstate the observed behavior.
 
-For that reason, this lab demonstrates ransomware-like impact behavior rather than actual ransomware encryption.
+Instead, the lab is described as a safe ransomware-like file-impact simulation that reproduces some of the observable characteristics associated with ransomware while remaining reversible and non-destructive.
 
 ## How CrowdStrike Falcon Maps to This Scenario
 
