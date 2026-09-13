@@ -368,18 +368,3 @@ A scheduled task, PowerShell process, outbound connection, or file rename may no
 I also reinforced the distinction between telemetry and detection. Falcon did not generate a detection for this capstone, but it still recorded enough activity to support a meaningful investigation.
 
 The main lesson was that visibility matters even when an alert is not generated. Strong endpoint telemetry helps analysts understand what happened, determine which activity is related, and decide what should be investigated or acted on next.
-
-## Final Takeaway
-
-This lab completed the multi-stage capstone by combining techniques and investigation concepts from the earlier exercises into one sequence.
-
-The strongest evidence came from correlating:
-
-- scheduled-task registration;
-- service-based process ancestry;
-- PowerShell command-line execution;
-- outbound network communication;
-- child-process activity;
-- controlled file modification.
-
-The capstone showed that a useful endpoint investigation is not built around a single alert. It is built by connecting related activity into a clear and defensible story.
